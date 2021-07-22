@@ -1,25 +1,26 @@
 import axios from "axios";
 
-const url_todosusuarios = "http://localhost:8080/usuario/all";
-const url_deleteusuario = "http://localhost:8080/usuario/delete";
-const url_addusuario = "http://localhost:8080/usuario/add";
-const url_editusuario = "http://localhost:8080/usuario/update"
+const url_base = "http://localhost:8080/usuarios";
 
 class UsuarioServices{
     getUsuario(){
-        return axios.get(url_todosusuarios);
+        return axios.get(url_base+"/all");
     }
 
     createUsuario(usuario){
-        return axios.post(url_addusuario, usuario);
+        return axios.post(url_base+"/add", usuario);
+    }
+
+    getUsuarioById(id_usuario){
+        return axios.get(url_base+"/locate/"+id_usuario);
     }
 
     editUsuario(usuario){
-        return axios.put(url_editusuario+"/"+usuario.id_usuario, usuario);
+        return axios.put(url_base+"/update/"+usuario.id_usuario, usuario);
     }
 
     deleteUsuario(id_usuario){
-        return axios.delete(url_deleteusuario+"/"+id_usuario);
+        return axios.delete(url_base+"/delete/"+id_usuario);
     }
 }
 

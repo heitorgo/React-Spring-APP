@@ -1,30 +1,30 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import { Container, Row, Table, Button, Col} from 'react-bootstrap';
-import UsuarioServices from '../services/UsuarioServices';
+import ContasPagarServices from '../services/ContasPagarServices';
 
-class listarUsuarios extends Component {
+class listarContasPagar extends Component{
 
     constructor (props){
         super(props);
         this.state = {
-            usuarios: []
+            contas_pagar: []
         }
 
         this.voltar = this.voltar.bind(this);
         this.excluir = this.excluir.bind(this);
         this.editar = this.editar.bind(this);
-        this.novoUsuario = this.novoUsuario.bind(this);
-        this.getUsuarios();
+        this.novaContaPagar = this.novaContaPagar.bind(this);
+        this.getContasPagar();
 
     }
 
     componentDidMount(){
-        this.getUsuarios();
+        this.getContasPagar();
     }
 
-    getUsuarios(){
-        UsuarioServices.getUsuario().then((resposta) => {
-            this.setState({usuarios: resposta.data});
+    getContasPagar(){
+        ContasPagarServices.getContaPagar().then((resposta) => {
+            this.setState({contas_pagar: resposta.data});
             console.log(resposta.data);
         });
     }
@@ -33,21 +33,21 @@ class listarUsuarios extends Component {
         this.props.history.push("/");
     }
 
-    excluir(id_usuario){
-        UsuarioServices.deleteUsuario(id_usuario).then(
+    excluir(id_pagar){
+        ContasPagarServices.deleteContaPagar(id_pagar).then(
             resposta => {
                 alert(resposta.data);
-                this.getUsuarios();
+                this.getContasPagar();
             }
         )
     }
 
-    editar(id_usuario){
-        this.props.history.push("/usuario/"+id_usuario);
+    editar(id_pagar){
+        this.props.history.push("/contapagar/"+id_pagar);
     }
 
-    novoUsuario(){
-        this.props.history.push("/usuario/_add");
+    novaContaPagar(){
+        this.props.history.push("/contapagar/_add");
     }
 
     render() {
@@ -57,37 +57,40 @@ class listarUsuarios extends Component {
                     <Button variant="link" onClick={this.voltar}>voltar</Button>
                 </Row>
                 <Row>
-                    <h1>Usuarios</h1>
+                    <h1>Contas a pagar</h1>
                 </Row>
                 <Row>
                     <Table striped bordered hover size="sm">
                         <thead>
                             <tr>
                                 <th>
-                                    Email
+                                    Valor
                                 </th>
                                 <th>
-                                    Senha
+                                    Data
                                 </th>
                                 <th>
-                                    Ações
+                                    Detalhamento
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
                             {
-                                this.state.usuarios.map(
-                                    usuario =>
-                                        <tr key = {usuario.id_usuario}>
+                                this.state.contas_pagar.map(
+                                    contapagar =>
+                                        <tr key = {contapagar.id_pagar}>
                                             <td>
-                                                {usuario.email_usuario}
+                                                {contapagar.valor_pagar}
                                             </td>
                                             <td>
-                                                {usuario.senha_usuario}
+                                                {contapagar.data_pagar}
                                             </td>
                                             <td>
-                                                <Button variant="warning" onClick={()=>this.editar(usuario.id_usuario)} >Editar</Button>
-                                                <Button variant="danger" onClick={()=>this.excluir(usuario.id_usuario)} >Excluir</Button>
+                                                {contapagar.detalhamento_pagar}
+                                            </td>
+                                            <td>
+                                                <Button variant="warning" onClick={()=>this.editar(contapagar.id_pagar)} >Editar</Button>
+                                                <Button variant="danger" onClick={()=>this.excluir(contapagar.id_pagar)} >Excluir</Button>
                                             </td>
                                         </tr>
                                 )
@@ -100,7 +103,7 @@ class listarUsuarios extends Component {
                         <Button className="float-left" variant="link" onClick={this.voltar}>voltar</Button>
                     </Col>
                     <Col>
-                        <Button  className="float-right" variant="secondary" onClick={this.novoUsuario}>Novo Usuario</Button>
+                        <Button  className="float-right" variant="secondary" onClick={this.novaContaPagar}>Nova Conta</Button>
                     </Col>
                 </Row>
             </Container>
@@ -108,4 +111,4 @@ class listarUsuarios extends Component {
     }
 }
 
-export default listarUsuarios;
+export default listarContasPagar;

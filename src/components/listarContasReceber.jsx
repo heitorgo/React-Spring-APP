@@ -1,30 +1,30 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import { Container, Row, Table, Button, Col} from 'react-bootstrap';
-import UsuarioServices from '../services/UsuarioServices';
+import ContasReceberServices from '../services/ContasReceberServices';
 
-class listarUsuarios extends Component {
+class listarContasReceber extends Component{
 
     constructor (props){
         super(props);
         this.state = {
-            usuarios: []
+            contas_receber: []
         }
 
         this.voltar = this.voltar.bind(this);
         this.excluir = this.excluir.bind(this);
         this.editar = this.editar.bind(this);
-        this.novoUsuario = this.novoUsuario.bind(this);
-        this.getUsuarios();
+        this.novaContaReceber = this.novaContaReceber.bind(this);
+        this.getContasReceber();
 
     }
 
     componentDidMount(){
-        this.getUsuarios();
+        this.getContasReceber();
     }
 
-    getUsuarios(){
-        UsuarioServices.getUsuario().then((resposta) => {
-            this.setState({usuarios: resposta.data});
+    getContasReceber(){
+        ContasReceberServices.getContaReceber().then((resposta) => {
+            this.setState({contas_receber: resposta.data});
             console.log(resposta.data);
         });
     }
@@ -33,21 +33,21 @@ class listarUsuarios extends Component {
         this.props.history.push("/");
     }
 
-    excluir(id_usuario){
-        UsuarioServices.deleteUsuario(id_usuario).then(
+    excluir(id_receber){
+        ContasReceberServices.deleteContaReceber(id_receber).then(
             resposta => {
                 alert(resposta.data);
-                this.getUsuarios();
+                this.getContasReceber();
             }
         )
     }
 
-    editar(id_usuario){
-        this.props.history.push("/usuario/"+id_usuario);
+    editar(id_receber){
+        this.props.history.push("/contareceber/"+id_receber);
     }
 
-    novoUsuario(){
-        this.props.history.push("/usuario/_add");
+    novaContaReceber(){
+        this.props.history.push("/contareceber/_add");
     }
 
     render() {
@@ -57,37 +57,40 @@ class listarUsuarios extends Component {
                     <Button variant="link" onClick={this.voltar}>voltar</Button>
                 </Row>
                 <Row>
-                    <h1>Usuarios</h1>
+                    <h1>Contas a receber</h1>
                 </Row>
                 <Row>
                     <Table striped bordered hover size="sm">
                         <thead>
                             <tr>
                                 <th>
-                                    Email
+                                    Valor
                                 </th>
                                 <th>
-                                    Senha
+                                    Data
                                 </th>
                                 <th>
-                                    Ações
+                                    Detalhamento
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
                             {
-                                this.state.usuarios.map(
-                                    usuario =>
-                                        <tr key = {usuario.id_usuario}>
+                                this.state.contas_receber.map(
+                                    contareceber =>
+                                        <tr key = {contareceber.id_receber}>
                                             <td>
-                                                {usuario.email_usuario}
+                                                {contareceber.valor_receber}
                                             </td>
                                             <td>
-                                                {usuario.senha_usuario}
+                                                {contareceber.data_receber}
                                             </td>
                                             <td>
-                                                <Button variant="warning" onClick={()=>this.editar(usuario.id_usuario)} >Editar</Button>
-                                                <Button variant="danger" onClick={()=>this.excluir(usuario.id_usuario)} >Excluir</Button>
+                                                {contareceber.detalhamento_receber}
+                                            </td>
+                                            <td>
+                                                <Button variant="warning" onClick={()=>this.editar(contareceber.id_receber)} >Editar</Button>
+                                                <Button variant="danger" onClick={()=>this.excluir(contareceber.id_receber)} >Excluir</Button>
                                             </td>
                                         </tr>
                                 )
@@ -100,7 +103,7 @@ class listarUsuarios extends Component {
                         <Button className="float-left" variant="link" onClick={this.voltar}>voltar</Button>
                     </Col>
                     <Col>
-                        <Button  className="float-right" variant="secondary" onClick={this.novoUsuario}>Novo Usuario</Button>
+                        <Button  className="float-right" variant="secondary" onClick={this.novaContaReceber}>Nova Conta</Button>
                     </Col>
                 </Row>
             </Container>
@@ -108,4 +111,4 @@ class listarUsuarios extends Component {
     }
 }
 
-export default listarUsuarios;
+export default listarContasReceber;

@@ -1,30 +1,30 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import { Container, Row, Table, Button, Col} from 'react-bootstrap';
-import UsuarioServices from '../services/UsuarioServices';
+import CustosFixosServices from '../services/CustosFixosServices';
 
-class listarUsuarios extends Component {
+class listarCustosFixos extends Component{
 
     constructor (props){
         super(props);
         this.state = {
-            usuarios: []
+            custos_fixos: []
         }
 
         this.voltar = this.voltar.bind(this);
         this.excluir = this.excluir.bind(this);
         this.editar = this.editar.bind(this);
-        this.novoUsuario = this.novoUsuario.bind(this);
-        this.getUsuarios();
+        this.novoCustoFixo = this.novoCustoFixo.bind(this);
+        this.getCustosFixos();
 
     }
 
     componentDidMount(){
-        this.getUsuarios();
+        this.getCustosFixos();
     }
 
-    getUsuarios(){
-        UsuarioServices.getUsuario().then((resposta) => {
-            this.setState({usuarios: resposta.data});
+    getCustosFixos(){
+        CustosFixosServices.getCustoFixo().then((resposta) => {
+            this.setState({custos_fixos: resposta.data});
             console.log(resposta.data);
         });
     }
@@ -33,21 +33,21 @@ class listarUsuarios extends Component {
         this.props.history.push("/");
     }
 
-    excluir(id_usuario){
-        UsuarioServices.deleteUsuario(id_usuario).then(
+    excluir(id_custo_fixo){
+        CustosFixosServices.deleteCusto(id_custo_fixo).then(
             resposta => {
                 alert(resposta.data);
-                this.getUsuarios();
+                this.getCustosFixos();
             }
         )
     }
 
-    editar(id_usuario){
-        this.props.history.push("/usuario/"+id_usuario);
+    editar(id_custo_fixo){
+        this.props.history.push("/custofixo/"+id_custo_fixo);
     }
 
-    novoUsuario(){
-        this.props.history.push("/usuario/_add");
+    novoCustoFixo(){
+        this.props.history.push("/custofixo/_add");
     }
 
     render() {
@@ -57,37 +57,40 @@ class listarUsuarios extends Component {
                     <Button variant="link" onClick={this.voltar}>voltar</Button>
                 </Row>
                 <Row>
-                    <h1>Usuarios</h1>
+                    <h1>Custos Fixos</h1>
                 </Row>
                 <Row>
                     <Table striped bordered hover size="sm">
                         <thead>
                             <tr>
                                 <th>
-                                    Email
+                                    Valor
                                 </th>
                                 <th>
-                                    Senha
+                                    Frequência
                                 </th>
                                 <th>
-                                    Ações
+                                    Detalhamento
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
                             {
-                                this.state.usuarios.map(
-                                    usuario =>
-                                        <tr key = {usuario.id_usuario}>
+                                this.state.custos_fixos.map(
+                                    custofixo =>
+                                        <tr key = {custofixo.id_custo_fixo}>
                                             <td>
-                                                {usuario.email_usuario}
+                                                {custofixo.valor_custo_fixo}
                                             </td>
                                             <td>
-                                                {usuario.senha_usuario}
+                                                {custofixo.frequencia_custo}
                                             </td>
                                             <td>
-                                                <Button variant="warning" onClick={()=>this.editar(usuario.id_usuario)} >Editar</Button>
-                                                <Button variant="danger" onClick={()=>this.excluir(usuario.id_usuario)} >Excluir</Button>
+                                                {custofixo.detalhamento_custo_fixo}
+                                            </td>
+                                            <td>
+                                                <Button variant="warning" onClick={()=>this.editar(custofixo.id_custo_fixo)} >Editar</Button>
+                                                <Button variant="danger" onClick={()=>this.excluir(custofixo.id_custo_fixo)} >Excluir</Button>
                                             </td>
                                         </tr>
                                 )
@@ -100,7 +103,7 @@ class listarUsuarios extends Component {
                         <Button className="float-left" variant="link" onClick={this.voltar}>voltar</Button>
                     </Col>
                     <Col>
-                        <Button  className="float-right" variant="secondary" onClick={this.novoUsuario}>Novo Usuario</Button>
+                        <Button  className="float-right" variant="secondary" onClick={this.novoCustoFixo}>Novo Custo</Button>
                     </Col>
                 </Row>
             </Container>
@@ -108,4 +111,4 @@ class listarUsuarios extends Component {
     }
 }
 
-export default listarUsuarios;
+export default listarCustosFixos;

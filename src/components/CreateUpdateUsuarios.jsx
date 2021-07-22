@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { Container, Row, Table, Button, Col, Form} from 'react-bootstrap';
+import { Container, Row, Button, Form, Col} from 'react-bootstrap';
+import UsuarioServices from '../services/UsuarioServices';
 
 class CreateUpdateUsuarios extends Component {
 
     constructor (props){
         super(props);
         this.state={
+            id_usuario: this.props.match.params.id_usuario,
             email_usuario:"",
             senha_usuario:""
         }
@@ -16,7 +18,19 @@ class CreateUpdateUsuarios extends Component {
     }
 
     componentDidMount(){
-
+        if(this.state.id_usuario === "_add"){
+            return false;
+        } else{
+            return UsuarioServices.getUsuarioById(this.state.id_usuario).then(
+                (resposta) => {
+                    let usuario = resposta.data;
+                    this.setState({
+                        email_usuario: usuario.email_usuario,
+                        senha_usuario: usuario.senha_usuario
+                    });
+                }
+            );
+        }
     }
 
     changeEmailHandler(event){
@@ -28,7 +42,30 @@ class CreateUpdateUsuarios extends Component {
     }
 
     cancelar(){
-        this.props.history.push("/usuario");
+        this.props.history.push("/usuarios");
+    }
+
+    salvarUsuario(){
+        let usuario = {
+            email_usuario : this.state.email_usuario,
+            senha_usuario : this.state.senha_usuario
+        }
+
+        if(this.state.id_usuario === "_add"){
+            UsuarioServices.createUsuario(usuario).then(
+                (resposta) => {
+                    alert(resposta.data);
+                }
+            )
+        } else{
+            usuario.id_usuario = this.state.id_usuario;
+            UsuarioServices.editUsuario(usuario).then(
+                (resposta) => {console.log(resposta.data)}
+            );
+        }
+
+        this.props.history.push("/usuarios");
+
     }
 
     render() {
@@ -39,20 +76,24 @@ class CreateUpdateUsuarios extends Component {
                 </Row>
                 <Form>
                     <Form.Group controlId="formEmail">
+                        <Form.Text className="text-muted">Email</Form.Text>
                         <Form.Control type="email" placeholder="seuemail@dominio.com" value={this.state.email_usuario} onChange={this.changeEmailHandler}></Form.Control>
-                        <Form.Text className="text-muted">Digite o seu Email</Form.Text>
                     </Form.Group>
                     <Form.Group controlId="formSenha">
-                        <Form.Control type="password" placeholder="Senha" value={this.state.senha_usuario} onChange={this.changeSenhaHandler}></Form.Control>
-                        <Form.Text className="text-muted">Digite o seu Email</Form.Text>
+                        <Form.Text className="text-muted">Senha</Form.Text>
+                        <Form.Control type="text" placeholder="Digite aqui sua senha" value={this.state.senha_usuario} onChange={this.changeSenhaHandler}></Form.Control>
                     </Form.Group>
                     <Row className="float-right">
-                        <Button variant="success" style={{margin: "10px 0px 10px 0px"}} className="btnSubmit" onClick={this.salvarUsuario}>
-                            Inserir
-                        </Button>
-                        <Button variant="warning" style={{margin: "10px"}} onClick={this.cancelar.bind(this)} >
-                            Cancelar
-                        </Button>
+                        <Col>
+                            <Button variant="success" style={{margin: "25px 0px 0px 0px"}} className="btnSubmit" onClick={this.salvarUsuario}>
+                                Inserir
+                            </Button>
+                        </Col>
+                        <Col>
+                            <Button variant="warning" style={{margin: "25px 0px 0px 0px"}} onClick={this.cancelar.bind(this)} >
+                                Cancelar
+                            </Button>
+                        </Col>
                     </Row>
                 </Form>
             </Container>
