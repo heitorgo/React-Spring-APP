@@ -17,6 +17,7 @@ import listarCustosFixos from './components/listarCustosFixos';
 import CreateUpdateCustosFixos from './components/CreateUpdateCustosFixos';
 import listarDespesasFixas from './components/listarDespesasFixas';
 import CreateUpdateDespesasFixas from './components/CreateUpdateDespesasFixas';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
